@@ -51,10 +51,12 @@
 		f.write(dataString("ESBR", "Alumina", 0.40))
 """
 
-import abaqus
+from odbAccess import *
+from abaqus import mdb
+from job import session
 import abaqusConstants as aq
 
-def submitJob(fileName="Job-1"):
+def submitJob(modelName, fileName="Job-1"):
 	mdb.Job(atTime=None, contactPrint=aq.OFF, description='', echoPrint=aq.OFF, 
 		explicitPrecision=aq.SINGLE, getMemoryFromAnalysis=True, historyPrint=aq.OFF, 
 		memory=90, memoryUnits=aq.PERCENTAGE, model=modelName, modelPrint=aq.OFF, 
@@ -85,7 +87,7 @@ def submitJob(fileName="Job-1"):
 
 # Get data 
 def getThermalProperties2D():
-	import odbAccess
+	
 	odb = session.openOdb('Job-1'+'.odb')
 	#odb = session.openOdb(name='Job-'+str(modelCount)+'.odb')
 	#odb = session.openOdb(name='Job-1.odb')
@@ -129,7 +131,7 @@ def dataString(matrixUsed, materialUsed, fillerPortion, radius, number, side,
 	
 	return matrixUsed+'\t'+materialUsed+'\t'+str(fillerPortion)+'\t'+str(radius)+'\t'+str(number)+'\t'+str(side)+'\t'+str(interfaceSize)+'\t'+str(deltaMinDist)+'\t'+str(calcPortion)+'\t'+str(interfaceConduct)+'\t'+str(randomSeed)+'\t'+str(nodes)+'\t'+str(elements)+'\t'+str(df)+'\t'+ str(meshSeed)+'\t'+str(avgHF)+'\t'+str(temp1-temp2)+'\t'+str(TC)+'\t'+str(noElementsWarning)+'\t'+warningString+warningPoints+'\n'
 
-def getThermalProperties3D(particleRadius, matrixSide):
+def getThermalProperties3D(particleRadius, matrixSide, temp1, temp2):
 	import odbAccess
 	odb = session.openOdb(name="Job-1"+'.odb')
 	lastFrame = odb.steps['Step-1'].frames[-1]

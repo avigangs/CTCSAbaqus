@@ -1,13 +1,15 @@
 import numpy
-execfile('hAssembly.py')
-execfile('hCoordinates.py')
-execfile('hJob.py')
-execfile('hMaterial.py')
-execfile('hMesh.py')
-execfile('hModel.py')
-execfile('hPart.py')
-execfile('hProperty.py')
-execfile('hStep.py')
+from abaqus import mdb
+import abaqusConstants as aq 
+from hAssembly import *
+from hCoordinates import *
+from hJob import *
+from hMaterial import *
+from hMesh import *
+from hModel import *
+from hPart import *
+from hProperty import *
+from hStep import *
 
 ### Increase distance delta in coordinate generation by interface length! 
 interfacePortions = [0.15, 0.2, 0.25, 0.3, 0.35, 0.4]

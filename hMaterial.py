@@ -33,7 +33,7 @@
 			radius : length of the particle radius used
 			portions : PHR/volume portions associated with the experiment
 """
-import abaqus
+from abaqus import mdb
 import abaqusConstants as aq
 
 # Consider something that limits particle numbers to ~40ish or 25ish

@@ -27,13 +27,18 @@
 		firstModel.Material(name="Steel")  
 """
 
-import abaqus
+from abaqus import mdb
 import abaqusConstants as aq
+
 
 def createModel(num):
 	modelName = 'Model-'+ str(num) 
 	# Abaqus command to create a new model database.
-	abaqus.mdb.Model(name=modelName, modelType=aq.STANDARD_EXPLICIT)
+	mdb.Model(name=modelName, modelType=aq.STANDARD_EXPLICIT)
 	# Create reference variable for the model object.
 	modelObject = mdb.models[modelName] 
 	return modelObject, modelName
+
+
+def dir1():
+	return dir()

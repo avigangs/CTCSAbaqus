@@ -87,7 +87,7 @@
 		See Example scripts.
 """
 
-import abaqus
+from abaqus import mdb
 import abaqusConstants as aq
 
 # NOTE: The three last methods in this file could all be "private" to 

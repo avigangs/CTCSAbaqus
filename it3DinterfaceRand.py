@@ -1,13 +1,15 @@
 import numpy
-execfile('hAssembly.py')
-execfile('hCoordinates.py')
-execfile('hJob.py')
-execfile('hMaterial.py')
-execfile('hMesh.py')
-execfile('hModel.py')
-execfile('hPart.py')
-execfile('hProperty.py')
-execfile('hStep.py')
+from abaqus import mdb
+import abaqusConstants as aq 
+from hAssembly import *
+from hCoordinates import *
+from hJob import *
+from hMaterial import *
+from hMesh import *
+from hModel import *
+from hPart import *
+from hProperty import *
+from hStep import *
 
 trialsPer = 1 # Number of times to run each experiment
 materials = getMaterialList() # Load in material Data
@@ -61,15 +63,15 @@ for i in range(len(materials[matrix]['fillers'])): # "For each filler material"
 			createSection(modelObject, part2, fillers[i], particleSet) # Create section for filler material
 			createSection(modelObject, part3, "Interface", interfaceSet) # Create section for interface
 			
-			modelRootAssembly = create3DMatrixInclusions(modelObject, part, part2, number, xVals, yVals, zVals, part3) # Create assembly and return references to assembly sets
+			modelRootAssembly, fullMatrixPart = create3DMatrixInclusions(modelObject, part, part2, number, xVals, yVals, zVals, part3) # Create assembly and return references to assembly sets
 			assemblyTop, assemblyBottom, assemblyAll = define3DAssemblySets(modelRootAssembly, side)
 			temp1, temp2 = 328.15, 298.15 # Assign heat temperature to be used in experiment
 			heatStep3D(modelObject, assemblyBottom, assemblyTop, temp1, temp2) # apply heat BC
-			elements, nodes, df, meshSeed = makeMesh3D()  # Draw mesh and return number of nodes and elements
-			makeElementSet(modelRootAssembly)
+			elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly)  # Draw mesh and return number of nodes and elements
+			makeElementSet(fullMatrixPart, modelRootAssembly)
 			print(str(seed) + " " +str(number) + " " + str(radius) + " " + str(df) + " " + str(meshSeed) + " " + str(elements) + " " +str(nodes) + " " + warningPoints)
-			warningString, noElementsWarning = submitJob()  # Submit job and take note of any warnings
-			avgHF, TC = getThermalProperties3D(radius, side) # Extract relevant information about thermal properties
+			warningString, noElementsWarning = submitJob(modelName)  # Submit job and take note of any warnings
+			avgHF, TC = getThermalProperties3D(radius, side, temp1, temp2) # Extract relevant information about thermal properties
 			f.write(dataString(matrix, fillers[i], portions[j], radius, number, side, interfacePortion, delta, calcPHR, interfaceConductivity, seed, nodes, elements, df, meshSeed, avgHF, temp1, temp2, TC, warningString, warningPoints, noElementsWarning)) # Write the data to file
 			del mdb.jobs["Job-1"]
 			del mdb.models[modelName]

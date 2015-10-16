@@ -2,6 +2,7 @@
 # Coordinates 
 	* Add comments!
 """
+from math import *
 
 """
 	 * Given a phr along with density, approximate radius size, and size of ESBR side

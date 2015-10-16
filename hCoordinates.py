@@ -98,21 +98,30 @@ def getPoints3D(seed, side, radius, number, interfacePortion=0.0, deltaCoefficie
 	# Delta is distances between particles
 	#delta = 2 * radius + (radius * deltaCoefficient) + (interfacePortion * radius) # Default delta will be 2 radius + one tenth of radius. s
 	# Think this works.
-	delta = 2 * ((radius + (radius * interfacePortion)) + (deltaCoefficient*(radius + radius*interfacePortion)))
+	#delta = 2 * ((radius + (radius * interfacePortion)) + (deltaCoefficient*(radius + radius*interfacePortion)))
 	
 	# x, y inside matrix without touching sides
 	# This may be an issue.
 	#rngr = side - (delta + radius * deltaCoefficient + radius * interfacePortion)
-	# rngr = side - delta
-	rngr = (delta / 2.0) + (delta/2.0) * 0.1
+	#rngr = side - delta
+	#rngr = (delta / 2.0) + (delta/2.0) * 0.1
 	#randXs = (radius + (radius * deltaCoefficient) + (interfacePortion * radius)) + rngr * numpy.random.rand(100000,1)
 	#randYs = (radius + (radius * deltaCoefficient) + (interfacePortion * radius)) + rngr * numpy.random.rand(100000,1)
 	#randZs = (radius + (radius * deltaCoefficient) + (interfacePortion * radius)) + rngr * numpy.random.rand(100000,1)
 	
-	randXs = rngr + (side-(rngr)) * numpy.random.rand(100000,1)
-	randYs = rngr + (side-(rngr)) * numpy.random.rand(100000,1)
-	randZs = rngr + (side-(rngr)) * numpy.random.rand(100000,1)
+	#randXs = rngr + (side-(rngr)) * numpy.random.rand(100000,1)
+	#randYs = rngr + (side-(rngr)) * numpy.random.rand(100000,1)
+	#randZs = rngr + (side-(rngr)) * numpy.random.rand(100000,1)
 	
+	######
+	r = radius
+	i = radius * interfacePortion + radius
+	dC = i * deltaCoefficient + i
+	d = r + (i - r) + (dC - i)
+	#d = radius + (interfacePortion * radius + radius)
+	randXs = d + (side-(2 * d)) * numpy.random.rand(100000,1)
+	randYs = d + (side-(2 * d)) * numpy.random.rand(100000,1)
+	randZs = d + (side-(2 * d)) * numpy.random.rand(100000,1)
 	
 	xCoords = [randXs[0][0]]
 	yCoords = [randYs[0][0]]
@@ -127,7 +136,7 @@ def getPoints3D(seed, side, radius, number, interfacePortion=0.0, deltaCoefficie
 		mindist = numpy.min(distances)
 		if numberCoords == number:
 			break
-		if (mindist > delta):
+		if (mindist > 2 * d):
 			xCoords.append(x[0])
 			yCoords.append(y[0])
 			zCoords.append(z[0])

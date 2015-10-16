@@ -114,15 +114,17 @@ def makeElementSet(fullMatrixPart, modelRootAssembly):
 ########### Info for testing Mesh
 """
 import numpy
-import ('hAssembly.py')
-import ('hCoordinates.py')
-import ('hJob.py')
-import ('hMaterial.py')
-import ('hMesh.py')
-import ('hModel.py')
-import ('hPart.py')
-import ('hProperty.py')
-import ('hStep.py')
+from abaqus import mdb
+import abaqusConstants as aq 
+from hAssembly import *
+from hCoordinates import *
+from hJob import *
+from hMaterial import *
+from hMesh import *
+from hModel import *
+from hPart import *
+from hProperty import *
+from hStep import *
 
 ### Increase distance delta in coordinate generation by interface length! 
 interfacePortion = 0.10

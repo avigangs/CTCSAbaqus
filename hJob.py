@@ -131,9 +131,10 @@ def dataString(matrixUsed, materialUsed, fillerPortion, radius, number, side,
 	
 	return matrixUsed+'\t'+materialUsed+'\t'+str(fillerPortion)+'\t'+str(radius)+'\t'+str(number)+'\t'+str(side)+'\t'+str(interfaceSize)+'\t'+str(deltaMinDist)+'\t'+str(calcPortion)+'\t'+str(interfaceConduct)+'\t'+str(randomSeed)+'\t'+str(nodes)+'\t'+str(elements)+'\t'+str(df)+'\t'+ str(meshSeed)+'\t'+str(avgHF)+'\t'+str(temp1-temp2)+'\t'+str(TC)+'\t'+str(noElementsWarning)+'\t'+warningString+warningPoints+'\n'
 
-def getThermalProperties3D(particleRadius, matrixSide, temp1, temp2):
+# Not general enough for different jobs
+def getThermalProperties3D(particleRadius, matrixSide, temp1, temp2, fileName="Job-1"):
 	import odbAccess
-	odb = session.openOdb(name="Job-1"+'.odb')
+	odb = session.openOdb(name=fileName+'.odb')
 	lastFrame = odb.steps['Step-1'].frames[-1]
 	hfl = lastFrame.fieldOutputs['HFL']
 	bottoms = odb.rootAssembly.instances['MATRIXFULL-1'].elementSets['BOT']

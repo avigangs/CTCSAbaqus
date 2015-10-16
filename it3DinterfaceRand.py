@@ -40,7 +40,7 @@ for i in range(len(materials[matrix]['fillers'])): # "For each filler material"
 			# Fix delta this run
 			#delta = 0.15
 			
-			modelObject, modelName = createModel(2) # Create model database "Model-2"
+			modelObject, modelName = createModel(1+totalIterations) # Create model database "Model-2"
 			side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, matrix, fillers[i]) # Define material attributes for specified matrix, fillers
 			interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
 			interfaceConductivity = int(interfaceConductivity[0])
@@ -70,11 +70,12 @@ for i in range(len(materials[matrix]['fillers'])): # "For each filler material"
 			elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly)  # Draw mesh and return number of nodes and elements
 			makeElementSet(fullMatrixPart, modelRootAssembly)
 			print(str(seed) + " " +str(number) + " " + str(radius) + " " + str(df) + " " + str(meshSeed) + " " + str(elements) + " " +str(nodes) + " " + warningPoints)
-			warningString, noElementsWarning = submitJob(modelName)  # Submit job and take note of any warnings
-			avgHF, TC = getThermalProperties3D(radius, side, temp1, temp2) # Extract relevant information about thermal properties
+			odbfileName = modelName
+			warningString, noElementsWarning = submitJob(modelName, odbfileName)  # Submit job and take note of any warnings
+			avgHF, TC = getThermalProperties3D(radius, side, temp1, temp2, odbfileName) # Extract relevant information about thermal properties
 			f.write(dataString(matrix, fillers[i], portions[j], radius, number, side, interfacePortion, delta, calcPHR, interfaceConductivity, seed, nodes, elements, df, meshSeed, avgHF, temp1, temp2, TC, warningString, warningPoints, noElementsWarning)) # Write the data to file
-			del mdb.jobs["Job-1"]
-			del mdb.models[modelName]
+			#del mdb.jobs["Job-1"]
+			#del mdb.models[modelName]
 		
 	
 

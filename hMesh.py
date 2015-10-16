@@ -15,7 +15,7 @@
 		numElm, numNodes = makeMesh() # Global seed is 20. 
 """
 
-import abaqus
+from abaqus import mdb
 import abaqusConstants as aq
 import mesh
 
@@ -41,7 +41,8 @@ def makeMesh2D(globalSeed=20):
 	
 	return elements, nodes
 
-def makeMesh3D(meshSeed=35, df=0.05):
+# WARNING: Slow convergence happens FAR too often. 
+def makeMesh3D(modelObject, modelRootAssembly, meshSeed=35, df=0.05):
 	import mesh
 	import random
 	modelRootAssembly.setMeshControls(elemShape=aq.TET, regions=(modelRootAssembly.sets['assemblyAll'].cells), technique=aq.FREE)
@@ -53,7 +54,7 @@ def makeMesh3D(meshSeed=35, df=0.05):
 		regions=(modelRootAssembly.sets['assemblyAll']))
 	nodes, elements = 0, 0
 	countTot = 0
-	dfs = [0.0375, 0.04, 0.045, 0.05, 0.055, 0.06, 0.065, 0.07, 0.75]
+	dfs = [0.0375, 0.04, 0.045, 0.05, 0.055, 0.06, 0.065]
 	df = random.choice(dfs)
 	totalCount = 0
 	while True:
@@ -100,27 +101,28 @@ def makeMesh3D(meshSeed=35, df=0.05):
 	
 	return elements, nodes, df, round(meshSeed)
 
+### FIX
 # Scoping and references!!!
 # Need for extracting data
-def makeElementSet(modelRootAssembly):
+def makeElementSet(fullMatrixPart, modelRootAssembly):
 	bottomFace = modelRootAssembly.instances['matrixFull-1'].faces.pointsOn[3]
 	topFace = modelRootAssembly.instances['matrixFull-1'].faces.pointsOn[1]
-	mdb.models[modelName].parts['matrixFull'].Set(faces=mdb.models[modelName].parts['matrixFull'].faces.findAt(topFace), name='top')
-	mdb.models[modelName].parts['matrixFull'].Set(faces=mdb.models[modelName].parts['matrixFull'].faces.findAt(bottomFace), name='bot')
+	fullMatrixPart.Set(faces=fullMatrixPart.faces.findAt(topFace), name='top')
+	fullMatrixPart.Set(faces=fullMatrixPart.faces.findAt(bottomFace), name='bot')
 
 
 ########### Info for testing Mesh
 """
 import numpy
-execfile('hAssembly.py')
-execfile('hCoordinates.py')
-execfile('hJob.py')
-execfile('hMaterial.py')
-execfile('hMesh.py')
-execfile('hModel.py')
-execfile('hPart.py')
-execfile('hProperty.py')
-execfile('hStep.py')
+import ('hAssembly.py')
+import ('hCoordinates.py')
+import ('hJob.py')
+import ('hMaterial.py')
+import ('hMesh.py')
+import ('hModel.py')
+import ('hPart.py')
+import ('hProperty.py')
+import ('hStep.py')
 
 ### Increase distance delta in coordinate generation by interface length! 
 interfacePortion = 0.10

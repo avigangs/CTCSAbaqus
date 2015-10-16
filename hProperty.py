@@ -19,7 +19,7 @@
 		# to the particles.
 """
 
-import abaqus
+from abaqus import mdb
 import abaqusConstants as aq
 
 def createSection(modelObject, part, strName, setName):

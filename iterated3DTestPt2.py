@@ -1,15 +1,17 @@
 ### FIX COMMENTS 
 
 import numpy
-execfile('hAssembly.py')
-execfile('hCoordinates.py')
-execfile('hJob.py')
-execfile('hMaterial.py')
-execfile('hMesh.py')
-execfile('hModel.py')
-execfile('hPart.py')
-execfile('hProperty.py')
-execfile('hStep.py')
+from abaqus import mdb
+import abaqusConstants as aq 
+from hAssembly import *
+from hCoordinates import *
+from hJob import *
+from hMaterial import *
+from hMesh import *
+from hModel import *
+from hPart import *
+from hProperty import *
+from hStep import *
 
 trialsPer = 10 # Number of times to run each experiment
 

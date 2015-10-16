@@ -12,10 +12,11 @@ TODO/Thoughts:
  * Add method to close the txt file if it encounters error/force quit. 
  * Find alternative to having "example" files that iterate through steps for data.
  * Add more shapes, also add single giant particle examples.
- * Execfile vs module import. 
  * Read more papers.
  * Deal with infinite loops in meshing. Also output to screen iteration number
 	and simulation type.
+ * Update README
+ * Config file for loading all the modules?
 
 
 *** CHANGE: Now rewrite to generate TONS of INP files for submission to HPC.

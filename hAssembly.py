@@ -38,7 +38,7 @@
 			assemblyAll: reference to assembly set for All
 """
 
-import abaqus
+from abaqus import mdb
 import abaqusConstants as aq
 
 def makeAssembly2D(modelObject, part):
@@ -130,7 +130,8 @@ def create3DMatrixInclusions(modelObject, matPart, parPart, number, xVals,
 			instances=(allInstances), keepIntersections=aq.ON, name='matrixFull',
 			originalInstances=aq.SUPPRESS) # make the final assembly
 		modelRootAssembly.makeIndependent(instances=(modelRootAssembly.instances['matrixFull-1'], ))
-	return modelRootAssembly
+		fullMatrixPart = modelObject.parts['matrixFull']
+	return modelRootAssembly, fullMatrixPart
 
 
 def define3DAssemblySets(modelRootAssembly, matrixSide):

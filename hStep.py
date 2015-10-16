@@ -14,7 +14,7 @@
 		heatStep2d(modelObject, aB, aT, 328.15, 298.15) # Temperature in Kelvin
 """
 
-import abaqus
+from abaqus import mdb
 import abaqusConstants as aq
 
 

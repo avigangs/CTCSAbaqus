@@ -14,7 +14,7 @@ def invPHR(phr, densityFiller, radiusFiller, densityMatrix, sideMatrix, twoD=Tru
 	radiusStep = 0.03*radiusFiller # Alter radius to accommodate varying phr 
 	
 	if twoD:
-		numberFillers = numpy.arange(1.,31.) # 1 to 30 particles
+		numberFillers = numpy.arange(1.,36.) # 1 to 30 particles
 		rsSquared = (numpy.arange(radiusFiller-10*radiusStep,  
 			radiusFiller+10*radiusStep , radiusStep)) ** 2
 		## Grid of number circles with variable radius
@@ -22,7 +22,7 @@ def invPHR(phr, densityFiller, radiusFiller, densityMatrix, sideMatrix, twoD=Tru
 		## Grid of differences
 		diffGrid = sideMatrix ** 2 - nRGrid
 	else:
-		defaultN = 70
+		defaultN = 75
 		endRange = calculatePHR3D(defaultN, densityFiller, radiusFiller+
 			10*radiusStep, densityMatrix, sideMatrix)
 		while phr > endRange:
@@ -152,7 +152,77 @@ def getPoints3D(seed, side, radius, number, interfacePortion=0.0, deltaCoefficie
 
 # Add a method to search hash for phr or volPortion then point to proper inv function
 
+##########################################
+# Hard coded simulations, make more general soon...
+def detCoordinatesAlumina():
+	import numpy
+	
+	# Get all data out of excel into the general method..
+	side = 520
+	number = 8
+	radius = 46
+	deltaPortion = 0.2
+	lowInterPortion = 0.1
+	highInterPortion = 1.15
+	phr = 10
+	interRad = 98.9
+	deltaRad = 118.68
+	d = deltaRad
+	
+	#d = radius + (interfacePortion * radius + radius)
+	xs = []
+	ys = []
+	zs = []
+	
+	numberCoords = 0
+	nz = [1, 3]
+	
+	# Use recursion for variable nested loops
+	for i in nz:
+		for j in nz:
+			for k in nz:
+				xs.append(d*i)
+				ys.append(d*j)
+				zs.append(d*k)
+	
+	return xs, ys, zs
 
+""""
+	
+	#xs.append(centerCube[0])
+	#ys.append(centerCube[1])
+	#zs.append(centerCube[2])
+	
+	#numberCoords = 1
+	# Look for a permuation method in numpy but for now...
+	#for x in range(per):
+	#	for y in range(per):
+	#		for z in range(per):
+	#			xs.append(deltaRad * (x+1))
+	#			
+	#			
+	#			
+	#	x = randXs[i]
+	#	y = randYs[i]
+	#	z = randZs[i]
+	#	distances = numpy.sqrt(numpy.power((x-xCoords), 2) + numpy.power((y-yCoords), 2) + numpy.power((z-zCoords), 2))
+	#	mindist = numpy.min(distances)
+	#	if numberCoords == number:
+	#		break
+	#	if (mindist > 2 * d):
+	#		xCoords.append(x[0])
+	#		yCoords.append(y[0])
+	#		zCoords.append(z[0])
+	#		numberCoords += 1
+	#	
+	
+	#warningMsg = ''
+	#if numberCoords != number:
+	#	warningMsg = '?'
+	#	number = numberCoords # Needed for updated return value.
+	#
+	#return xCoords, yCoords, zCoords, warningMsg, number
+"""
 
 
 """ Need to fix!

@@ -42,15 +42,19 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Python compiled
-.pyc
+# =========================
+# Python
+# =========================
+*.pyc
 
-# Abaqus files to ignore
-.ipm
-.msg
-.odb
-.prt
-.sim
-.sta
-.com
-.dat
+# =========================
+# Abaqus files
+# =========================
+*.ipm
+*.msg
+*.odb
+*.prt
+*.sim
+*.sta
+*.com
+*.dat

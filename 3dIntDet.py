@@ -77,8 +77,12 @@ heatStep3D(modelObject, assemblyBottom, assemblyTop, temp1, temp2) # apply heat 
 elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly)  # Draw mesh and return number of nodes and elements
 makeElementSet(fullMatrixPart, modelRootAssembly)
 print(str(seed) + " " +str(number) + " " + str(radius) + " " + str(df) + " " + str(meshSeed) + " " + str(elements) + " " +str(nodes) + " " + warningPoints)
-odbfileName = modelName
-warningString, noElementsWarning = submitJob(modelName, odbfileName)  # Submit job and take note of any warnings
-avgHF, TC = getThermalProperties3D(radius, side, temp1, temp2, odbfileName) # Extract relevant information about thermal properties
+fileName = "job1341"
+jobFi = createJob(modelName, fileName)
+generateINP(fileName)
 
-print(dataString(matrix, fillers[1], portions[3], radius, number, side, interfacePortion, delta, calcPHR, interfaceConductivity, seed, nodes, elements, df, meshSeed, avgHF, temp1, temp2, TC, warningString, warningPoints, noElementsWarning)) # Write the data to file
+#odbfileName = modelName
+#warningString, noElementsWarning = submitJob(modelName, odbfileName)  # Submit job and take note of any warnings
+#avgHF, TC = getThermalProperties3D(radius, side, temp1, temp2, odbfileName) # Extract relevant information about thermal properties
+
+#print(dataString(matrix, fillers[1], portions[3], radius, number, side, interfacePortion, delta, calcPHR, interfaceConductivity, seed, nodes, elements, df, meshSeed, avgHF, temp1, temp2, TC, warningString, warningPoints, noElementsWarning)) # Write the data to file

@@ -56,6 +56,7 @@ from abaqus import mdb
 from job import session
 import abaqusConstants as aq
 
+# SEPERATE INTO TWO METHODS
 def submitJob(modelName, fileName="Job-1"):
 	mdb.Job(atTime=None, contactPrint=aq.OFF, description='', echoPrint=aq.OFF, 
 		explicitPrecision=aq.SINGLE, getMemoryFromAnalysis=True, historyPrint=aq.OFF, 
@@ -82,7 +83,6 @@ def submitJob(modelName, fileName="Job-1"):
 		
 	
 	return warningString, noElementsWarning
-
 
 
 # Get data 
@@ -160,3 +160,16 @@ def getThermalProperties3D(particleRadius, matrixSide, temp1, temp2, fileName="J
 	avgHeatFlux = sumsVals / count
 	thermalCond = avgHeatFlux * side / (temp1-temp2)
 	return int(round(avgHeatFlux, -1)), round(thermalCond, 4)
+
+def createJob(modelName, fileName='Job-1'):
+	mdb.Job(atTime=None, contactPrint=aq.OFF, description='', echoPrint=aq.OFF, 
+		explicitPrecision=aq.SINGLE, getMemoryFromAnalysis=True, historyPrint=aq.OFF, 
+		memory=90, memoryUnits=aq.PERCENTAGE, model=modelName, modelPrint=aq.OFF, 
+		multiprocessingMode=aq.DEFAULT, name=fileName, nodalOutputPrecision=aq.SINGLE, 
+		numCpus=1, queue=None, scratch='', type=aq.ANALYSIS, userSubroutine='', 
+		waitHours=0, waitMinutes=0)
+	return mdb.jobs[fileName]
+
+
+def generateINP(fileName='Job-1'):
+	mdb.jobs[fileName].writeInput(consistencyChecking=aq.TRUE)

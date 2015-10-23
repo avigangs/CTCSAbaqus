@@ -42,7 +42,7 @@ def makeMesh2D(globalSeed=20):
 	return elements, nodes
 
 # WARNING: Slow convergence happens FAR too often. 
-def makeMesh3D(modelObject, modelRootAssembly, meshSeed=35, df=0.05):
+def makeMesh3D(modelObject, modelRootAssembly, meshSeed=45, df=0.05):
 	import mesh
 	import random
 	modelRootAssembly.setMeshControls(elemShape=aq.TET, regions=(modelRootAssembly.sets['assemblyAll'].cells), technique=aq.FREE)
@@ -54,7 +54,7 @@ def makeMesh3D(modelObject, modelRootAssembly, meshSeed=35, df=0.05):
 		regions=(modelRootAssembly.sets['assemblyAll']))
 	nodes, elements = 0, 0
 	countTot = 0
-	dfs = [0.0375, 0.04, 0.045, 0.05, 0.055, 0.06, 0.065]
+	dfs = [0.045, 0.05, 0.055, 0.06, 0.0650, 0.007, 0.0075, 0.008]
 	df = random.choice(dfs)
 	totalCount = 0
 	while True:
@@ -76,7 +76,7 @@ def makeMesh3D(modelObject, modelRootAssembly, meshSeed=35, df=0.05):
 			meshSeed = meshSeed * 1.2
 			df = random.choice(dfs)
 		elif elements > 200000:
-			meshSeed = meshSeed * 1.15
+			meshSeed = meshSeed * 1.25
 			df = random.choice(dfs)
 		elif elements > 162000:
 			meshSeed = meshSeed * 1.1
@@ -85,7 +85,7 @@ def makeMesh3D(modelObject, modelRootAssembly, meshSeed=35, df=0.05):
 		
 		countTot = countTot + 1
 		if countTot == 7:
-			meshSeeds = [25, 27.5, 30, 32.5, 35, 37.5, 40, 42.5, 45, 47.5]
+			meshSeeds = [27.5, 30, 32.5, 35, 37.5, 40, 42.5, 45, 47.5, 50, 52, 55]
 			meshSeed = random.choice(meshSeeds)
 			countTot = 0
 			df = random.choice(dfs)

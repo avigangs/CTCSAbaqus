@@ -38,7 +38,3 @@ def createModel(num):
 	# Create reference variable for the model object.
 	modelObject = mdb.models[modelName] 
 	return modelObject, modelName
-
-
-def dir1():
-	return dir()

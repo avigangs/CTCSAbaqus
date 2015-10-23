@@ -1,10 +1,7 @@
 TODO/Thoughts:
- * Generate 2D/3D Non-interface data after major bug discovery in the particle generation part.
  * Clean hJob, hMaterial, hMesh, hCoordinates 
  * Finish spherePacking script in Matlab to have hard limit on input for Abaqus, add method in hCoords
  * Carbon Nanotubes
- * Deterministic particle placement
- * Random interface property simulations
  * More TDD when time permits.
  * Investigate clustering more, add more checks for delta to ensure particles work.
  * Limit ODB output.
@@ -12,13 +9,12 @@ TODO/Thoughts:
  * Add method to close the txt file if it encounters error/force quit. 
  * Find alternative to having "example" files that iterate through steps for data.
  * Add more shapes, also add single giant particle examples.
- * Read more papers.
  * Deal with infinite loops in meshing. Also output to screen iteration number
 	and simulation type.
  * Update README
  * Config file for loading all the modules?
-
-
-*** CHANGE: Now rewrite to generate TONS of INP files for submission to HPC.
-* Need to figure out if I have to limit data generated, or how to access ODB 
-* at the cluster
+ * Now rewrite to generate TONS of INP files for submission to HPC.
+ * Need to figure out if I have to limit data generated, or how to access ODB files at cluster
+ * No more example files doing the work, need to make some class structure or something
+ * Add testing for coordinate/phr/volume methods and get data from excel into them. 
+ * CODE SMELLS: hMaterial (Do ONE THING), Methods travelling in packs, too many parameters

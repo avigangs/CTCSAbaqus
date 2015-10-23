@@ -2,7 +2,6 @@ TODO/Thoughts:
  * Clean hJob, hMaterial, hMesh, hCoordinates 
  * Finish spherePacking script in Matlab to have hard limit on input for Abaqus, add method in hCoords
  * Carbon Nanotubes
- * Deterministic particle placement
  * More TDD when time permits.
  * Investigate clustering more, add more checks for delta to ensure particles work.
  * Limit ODB output.

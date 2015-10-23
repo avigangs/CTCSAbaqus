@@ -32,19 +32,18 @@ modelObject, modelName = createModel(2)
 side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, matrix, "Alumina")
 
 # which phr
-phr = materials[matrix]['fillers']['Alumina']['phr']
-phr = phr[2]
+phr = portions[4]
 #densityMatrix = materials[matrix]['densityM']
 #densityFiller = materials[matrix]['fillers']['Alumina']['densityF']
 #sideMatrix = materials[matrix]['fillers']['Alumina']['side']
 
 # get coordinates, interface Max, random interface size, etc.
 radius, number = invPHRAlternate3D(phr, dP, radius, dM, side)
-#delta = 0.15
+delta = 0.15
 intPortionLimit = getInterfacePortionLimit(side, radius, number)
-interfacePortion = numpy.random.sample(1) * (intPortionLimit-0.1) + 0.1 # random 0.1 to limit inclusive
+interfacePortion = numpy.random.sample(1) * (intPortionLimit-0.15) + 0.15 # random 0.1 to limit inclusive
 interfacePortion = round(interfacePortion[0], 3)
-xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number, intPortionLimit)
+xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number)
 
 ## define range for interface conductivity # Either constant or varying depending on other constants
 # run rest of simulation
@@ -82,4 +81,4 @@ odbfileName = modelName
 warningString, noElementsWarning = submitJob(modelName, odbfileName)  # Submit job and take note of any warnings
 avgHF, TC = getThermalProperties3D(radius, side, temp1, temp2, odbfileName) # Extract relevant information about thermal properties
 
-print(dataString(matrix, fillers[1], portions[0], radius, number, side, interfacePortion, delta, calcPHR, interfaceConductivity, seed, nodes, elements, df, meshSeed, avgHF, temp1, temp2, TC, warningString, warningPoints, noElementsWarning)) # Write the data to file
+print(dataString(matrix, fillers[1], portions[3], radius, number, side, interfacePortion, delta, calcPHR, interfaceConductivity, seed, nodes, elements, df, meshSeed, avgHF, temp1, temp2, TC, warningString, warningPoints, noElementsWarning)) # Write the data to file

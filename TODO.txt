@@ -16,3 +16,6 @@ TODO/Thoughts:
  * Config file for loading all the modules?
  * Now rewrite to generate TONS of INP files for submission to HPC.
  * Need to figure out if I have to limit data generated, or how to access ODB files at cluster
+ * No more example files doing the work, need to make some class structure or something
+ * Add testing for coordinate/phr/volume methods and get data from excel into them. 
+ * CODE SMELLS: hMaterial (Do ONE THING), Methods travelling in packs, too many parameters

@@ -11,30 +11,50 @@ from hPart import *
 from hProperty import *
 from hStep import *
 
+## Catastrophic failure!!! Spheres forming on outside of matrix
+
+## NOTE THAT we may be able to leave out tons of these procedures. All I need is to 
+# have the basic model set up and only change either Interface conductivity or 
+# interface portion size. All else will stay constant. Object Orientation could
+# come in nicely.
+
+# Get material list
 materials = getMaterialList() # Load in material Data
 matrix = "ESBR" # Choose the first experiment from TCNanoFillers
 fillers = ["ZincOxide", "Alumina"] # Two fillers associated with first experiment
-
 print('Matrix\tFiller\tPortion\tRadius\tNumber\tSide\tIntSize\tDelta\tCalcPor\tIntCond\tSeed\tNodes\tElements\tDevFac\tMeshSeed\tq\tdT\tk\tNoElmWarn\tWarn\n')
-
 seed = None
 
-interfacePortion = numpy.random.sample(1) * 1.15 + 0.10 # Between 0.15 and 0.45 greater than radius
-interfacePortion = round(interfacePortion[0], 2)
+# make model
+modelObject, modelName = createModel(2)
 
-delta = 0.15 
-
-modelObject, modelName = createModel(2) 
+# define materials
 side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, matrix, "Alumina")
-radius = 46
-number = 8
+
+# which phr
+phr = materials[matrix]['fillers']['Alumina']['phr']
+phr = phr[2]
+#densityMatrix = materials[matrix]['densityM']
+#densityFiller = materials[matrix]['fillers']['Alumina']['densityF']
+#sideMatrix = materials[matrix]['fillers']['Alumina']['side']
+
+# get coordinates, interface Max, random interface size, etc.
+radius, number = invPHRAlternate3D(phr, dP, radius, dM, side)
+#delta = 0.15
+intPortionLimit = getInterfacePortionLimit(side, radius, number)
+interfacePortion = numpy.random.sample(1) * (intPortionLimit-0.1) + 0.1 # random 0.1 to limit inclusive
+interfacePortion = round(interfacePortion[0], 3)
+xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number, intPortionLimit)
+
+## define range for interface conductivity # Either constant or varying depending on other constants
+# run rest of simulation
 interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
 interfaceConductivity = int(interfaceConductivity[0])
 
-
+# Define interface materials
 defineMaterial(modelObject, "Interface", dM, interfaceConductivity) # Define interface conductivity... Note that this will be generated randomly
 
-xVals, yVals, zVals = detCoordinatesAlumina() # returns coordinates for inclusion locations. 
+# Check PHR values
 calcPHR = round(calculatePHR3D(number, dP, radius, dM, side))
 
 part = createMatrix(modelObject, side, False) # Create the matrix

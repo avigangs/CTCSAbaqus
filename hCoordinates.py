@@ -177,52 +177,121 @@ def detCoordinatesAlumina():
 	numberCoords = 0
 	nz = [1, 3]
 	
-	# Use recursion for variable nested loops
+	sizeInc = side / 4.0
+	
+	# This also limits delta to < 1/4 side or whatever...
+	# So maybe define interface range to be < 1/4 side or 1/n depending on number
 	for i in nz:
 		for j in nz:
 			for k in nz:
-				xs.append(d*i)
-				ys.append(d*j)
-				zs.append(d*k)
+				xs.append(sizeInc*i)
+				ys.append(sizeInc*j)
+				zs.append(sizeInc*k)
+	
+	# Use recursion for variable nested loops
+	#for i in nz:
+	#	for j in nz:
+	#		for k in nz:
+	#			xs.append(d*i)
+	#			ys.append(d*j)
+	#			zs.append(d*k)
 	
 	return xs, ys, zs
 
-""""
+## ADD code to have all the functionality the excel file has for determining
+# all the ranges, numbers, radius, etc. Bisection method or similar should be fine
+
+def holder():
+	numberPossibilities = [1, 8, 27, 64, 125]
+
+# Alternate version of other invPHR function
+# NOTE: consider having one that returns closes approximation for each number size
+# so we can make sure that number of particles doesn't disproportionately influence 
+# TC. 
+def invPHRAlternate3D(phr, densityFiller, radiusFiller, densityMatrix, sideMatrix):
+	import numpy
+	radiusStep = 0.02*radiusFiller # Alter radius to accommodate varying phr 
+	stepSize = 15
+	nS = [1, 8, 27, 64, 125]
+	endRange = calculatePHR3D(nS[4], densityFiller, 
+		radiusFiller+stepSize*radiusStep, densityMatrix, sideMatrix)
+	lowRange = calculatePHR3D(nS[0], densityFiller, 
+		radiusFiller-stepSize*radiusStep, densityMatrix, sideMatrix)
 	
-	#xs.append(centerCube[0])
-	#ys.append(centerCube[1])
-	#zs.append(centerCube[2])
+	while phr > endRange and phr < lowRange:
+		if phr > endRange:
+			stepSize = stepSize + 1
+			endRange = calculatePHR3D(nS[4], densityFiller, radiusFiller+
+				stepSize*radiusStep, densityMatrix, sideMatrix)
+		else:
+			stepSize = stepSize + 1
+			lowRange = calculatePHR3D(nS[4], densityFiller, radiusFiller+
+				stepSize*radiusStep, densityMatrix, sideMatrix)
+			
 	
-	#numberCoords = 1
-	# Look for a permuation method in numpy but for now...
-	#for x in range(per):
-	#	for y in range(per):
-	#		for z in range(per):
-	#			xs.append(deltaRad * (x+1))
-	#			
-	#			
-	#			
-	#	x = randXs[i]
-	#	y = randYs[i]
-	#	z = randZs[i]
-	#	distances = numpy.sqrt(numpy.power((x-xCoords), 2) + numpy.power((y-yCoords), 2) + numpy.power((z-zCoords), 2))
-	#	mindist = numpy.min(distances)
-	#	if numberCoords == number:
-	#		break
-	#	if (mindist > 2 * d):
-	#		xCoords.append(x[0])
-	#		yCoords.append(y[0])
-	#		zCoords.append(z[0])
-	#		numberCoords += 1
-	#	
+	rsCubed = (numpy.arange(radiusFiller-stepSize*radiusStep,  
+		radiusFiller+10*radiusStep , radiusStep)) ** 3
+	## Grid of number circles with variable radius
+	nRGrid = numpy.outer(nS,rsCubed) * pi * 4.0/3.0
+	## Grid of differences
+	diffGrid = sideMatrix ** 3 - nRGrid 
 	
-	#warningMsg = ''
-	#if numberCoords != number:
-	#	warningMsg = '?'
-	#	number = numberCoords # Needed for updated return value.
-	#
-	#return xCoords, yCoords, zCoords, warningMsg, number
-"""
+	ratioGrid = nRGrid/diffGrid
+	phrGrid = numpy.multiply((100 * densityFiller / densityMatrix), ratioGrid)
+	# Matrix of distances from phr
+	distn = numpy.power(numpy.power((phr-phrGrid), 2), 0.5)
+	# Returns the combination yielding closest approximation to phr
+	vals = numpy.nonzero(distn == distn.min()) 
+	r = numpy.power((rsCubed[vals[1][0]]), 1/3.0)
+	n = nS[vals[0][0]] # number of inclusions
+	return r, int(n)
+
+# phr = 10
+# densityFiller = 3.950e-015
+# radiusFiller = 37.5
+# densityMatrix = 9.3e-016
+# sideMatrix = 520
+# r, n = invPHRAlternate3D(phr, densityFiller, radiusFiller, densityMatrix, sideMatrix)
+
+## NEED TO LIMIT DELTA < side/2*(n^1/3)
+
+# Now next... we want the placement of the sphere centers that lets us vary our 
+# interface size within the limits specified. 1. limit function, 2. change "getPoints"
+
+# Works!!
+def getInterfacePortionLimit(side, radius, number, delta=0.15):
+	import numpy
+	
+	#hardLimit = side / (2.0 * number ** (1/3.0)) # Ensure d < this
+	
+	numerator = side - (2.0 * (number ** (1/3.0))) * (radius * delta + radius)
+	denominator = 2.0 * (number ** (1/3.0)) * (radius * delta + radius)
+	intPortionLimit = numerator / float(denominator)
+
+	return intPortionLimit
+
+def getPoints3dDeterministic(side, radius, number, interfacePortion=0.0, delta=0.15):
+	import numpy
+	
+	xs = []
+	ys = []
+	zs = []
+	
+	impNum = (2 *(number ** (1/3.0)))
+	impNum = int(round(impNum))
+	nz = [y+1 for y in range(impNum) if (y+1) % 2 == 1]
+	sizeInc = side / float(impNum)
+	
+	# This also limits delta to < 1/4 side or whatever...
+	# So maybe define interface range to be < 1/4 side or 1/n depending on number
+	for i in nz:
+		for j in nz:
+			for k in nz:
+				xs.append(sizeInc*i)
+				ys.append(sizeInc*j)
+				zs.append(sizeInc*k)
+	
+	return xs, ys, zs
 
 
 """ Need to fix!

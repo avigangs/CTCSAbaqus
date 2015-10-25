@@ -11,8 +11,6 @@ from hPart import *
 from hProperty import *
 from hStep import *
 
-## Catastrophic failure!!! Spheres forming on outside of matrix
-
 ## NOTE THAT we may be able to leave out tons of these procedures. All I need is to 
 # have the basic model set up and only change either Interface conductivity or 
 # interface portion size. All else will stay constant. Object Orientation could
@@ -41,14 +39,16 @@ phr = portions[4]
 radius, number = invPHRAlternate3D(phr, dP, radius, dM, side)
 delta = 0.15
 intPortionLimit = getInterfacePortionLimit(side, radius, number)
-interfacePortion = numpy.random.sample(1) * (intPortionLimit-0.15) + 0.15 # random 0.1 to limit inclusive
-interfacePortion = round(interfacePortion[0], 3)
+#interfacePortion = numpy.random.sample(1) * (intPortionLimit-0.15) + 0.15 # random 0.1 to limit inclusive
+#interfacePortion = round(interfacePortion[0], 3)
+interfacePortion = intPortionLimit / 2.0
 xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number)
 
 ## define range for interface conductivity # Either constant or varying depending on other constants
 # run rest of simulation
-interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
-interfaceConductivity = int(interfaceConductivity[0])
+#interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
+#interfaceConductivity = int(interfaceConductivity[0])
+interfaceConductivity = (cP + cM) / 2.0
 
 # Define interface materials
 defineMaterial(modelObject, "Interface", dM, interfaceConductivity) # Define interface conductivity... Note that this will be generated randomly
@@ -74,6 +74,7 @@ modelRootAssembly, fullMatrixPart = create3DMatrixInclusions(modelObject, part, 
 assemblyTop, assemblyBottom, assemblyAll = define3DAssemblySets(modelRootAssembly, side)
 temp1, temp2 = 328.15, 298.15 # Assign heat temperature to be used in experiment
 heatStep3D(modelObject, assemblyBottom, assemblyTop, temp1, temp2) # apply heat BC
+limitOutputHFL(modelObject, assemblyBottom, assemblyTop) # Limit ODB Output
 elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly)  # Draw mesh and return number of nodes and elements
 makeElementSet(fullMatrixPart, modelRootAssembly)
 print(str(seed) + " " +str(number) + " " + str(radius) + " " + str(df) + " " + str(meshSeed) + " " + str(elements) + " " +str(nodes) + " " + warningPoints)

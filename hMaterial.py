@@ -101,3 +101,36 @@ def defExperiment(modelObject, matrixMaterial, fillerMaterial):
 		portions = fillerReference['volPortion']
 	
 	return side, radius, portions, dP, dM, cP, cM
+
+
+def makeFileStructure():
+	topLevel = "inpFiles"
+	os.makedirs(topLevel)
+	for key, val in z.iteritems():
+		os.makedirs(topLevel+"/"+str(key))
+		fillersx = z[key]['fillers']
+		for key2, val2 in fillersx.iteritems():
+			os.makedirs(topLevel+"/"+str(key)+"/"+str(key2))
+			portio1 = 'phr'
+			portio2 = 'volPortion'
+			if portio1 in z[key]['fillers'][key2].keys():
+				portionsy = z[key]['fillers'][key2][portio1]
+			elif portio2 in z[key]['fillers'][key2].keys():
+				portionsy = z[key]['fillers'][key2][portio2]
+			else:
+				break
+			
+			for val3 in portionsy:
+				os.makedirs(topLevel+"/"+str(key)+"/"+str(key2)+"/"+str(val3))
+				params = ["radius", "tc"]
+				for val4 in params:
+					os.makedirs(topLevel+"/"+str(key)+"/"+str(key2)+"/"+str(val3)+"/"+str(val4))
+
+
+def checkExist():
+	if not os.path.exists("inpFiles"):
+		inpRoot = "inpFiles"
+		os.makedirs(inpRoot)
+	else:
+		inpRoot = "inpFiles"+str(141)
+		os.makedirs("inpFiles"+str(141))

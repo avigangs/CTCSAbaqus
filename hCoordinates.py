@@ -156,22 +156,23 @@ def getPoints3D(seed, side, radius, number, interfacePortion=0.0, deltaCoefficie
 # TC. 
 def invPHRAlternate3D(phr, densityFiller, radiusFiller, densityMatrix, sideMatrix):
 	import numpy
-	radiusStep = 0.02*radiusFiller # Alter radius to accommodate varying phr 
-	stepSize = 20
-	nS = [1,8,27,64,125]
-	endRange = calculatePHR3D(nS[4], densityFiller, 
+	radiusStep = 0.025*radiusFiller # Alter radius to accommodate varying phr 
+	stepSize = 30
+	nS = [1,8,27,64] # [125]
+	endRange = calculatePHR3D(nS[3], densityFiller, 
 		radiusFiller+stepSize*radiusStep, densityMatrix, sideMatrix)
 	lowRange = calculatePHR3D(nS[0], densityFiller, 
 		radiusFiller-stepSize*radiusStep, densityMatrix, sideMatrix)
 	
+	## NOTE SOMETHING WRONG HHERE THATT TAKES LONG TIME
 	while phr > endRange and phr < lowRange:
 		if phr > endRange:
-			stepSize = stepSize + 1
-			endRange = calculatePHR3D(nS[4], densityFiller, radiusFiller+
+			stepSize = stepSize + 3
+			endRange = calculatePHR3D(nS[3], densityFiller, radiusFiller+
 				stepSize*radiusStep, densityMatrix, sideMatrix)
 		else:
-			stepSize = stepSize + 1
-			lowRange = calculatePHR3D(nS[4], densityFiller, radiusFiller+
+			stepSize = stepSize + 3
+			lowRange = calculatePHR3D(nS[3], densityFiller, radiusFiller+
 				stepSize*radiusStep, densityMatrix, sideMatrix)
 			
 	

@@ -173,3 +173,14 @@ def createJob(modelName, fileName='Job-1'):
 
 def generateINP(fileName='Job-1'):
 	mdb.jobs[fileName].writeInput(consistencyChecking=aq.TRUE)
+
+def paraStudyDirectories():
+	import os
+	if not os.path.exists("inpFiles"):
+		os.makedirs("inpFiles")
+
+def simDir(id):
+	import os
+	if not os.path.exists("inpFiles"):
+		if not os.path.exists("inpFiles/"+str(id)):
+			os.makedirs("inpFiles/"+str(id))

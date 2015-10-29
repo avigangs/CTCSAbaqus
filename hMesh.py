@@ -55,7 +55,10 @@ def makeMesh3D(modelObject, modelRootAssembly, meshSeed=45, df=0.05):
 	nodes, elements = 0, 0
 	countTot = 0
 	dfs = [0.045, 0.05, 0.055, 0.06, 0.0650, 0.007, 0.0075, 0.008]
+	#dfs = [0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04]
+	#meshs = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
 	df = random.choice(dfs)
+	#meshSeed = random.choice(meshs)
 	totalCount = 0
 	while True:
 		totalCount = totalCount + 1
@@ -67,6 +70,18 @@ def makeMesh3D(modelObject, modelRootAssembly, meshSeed=45, df=0.05):
 		nodes = len(modelObject.rootAssembly.instances['matrixFull-1'].nodes)
 		elements = len(modelObject.rootAssembly.instances['matrixFull-1'].elements)
 		
+		break
+		
+		#if elements < 400000:
+		#	df = random.choice(dfs)
+		#	meshSeed = random.choice(meshs)
+		#elif elements > 4000000:
+		#	df = random.choice(dfs)
+		#	meshSeed = random.choice(meshs)
+		#else:
+		#	break
+		
+		"""
 		if elements < 35000:
 			df = random.choice(dfs)
 			meshSeed = meshSeed * 0.90
@@ -94,7 +109,7 @@ def makeMesh3D(modelObject, modelRootAssembly, meshSeed=45, df=0.05):
 		#	meshSeeds = [25, 27.5, 30, 32.5, 35, 37.5, 40]
 		#	meshSeed = random.choice(meshSeeds)
 		#	df = random.choice(dfs)
-		
+		"""
 		
 	
 	

@@ -50,6 +50,7 @@ def limitOutputHFL(modelObject, assemblyBottom, assemblyTop):
 		'F-Output-2', rebar=aq.EXCLUDE, region=assemblyTop, sectionPoints=
 		aq.DEFAULT, variables=('HFL', ))
 
+# May need to specify history to deal with warning messages.
 """
 mdb.models['Model-2'].HistoryOutputRequest(createStepName='Step-1', frequency=
     LAST_INCREMENT, name='H-Output-1', rebar=EXCLUDE, region=

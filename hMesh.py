@@ -54,7 +54,7 @@ def makeMesh3D(modelObject, modelRootAssembly, meshSeed=45, df=0.05):
 		regions=(modelRootAssembly.sets['assemblyAll']))
 	nodes, elements = 0, 0
 	countTot = 0
-	dfs = [0.045, 0.05, 0.055, 0.06, 0.0650, 0.007, 0.0075, 0.008]
+	dfs = [0.04, 0.045, 0.05, 0.055, 0.06, 0.0650, 0.07, 0.075, 0.08]
 	#dfs = [0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04]
 	#meshs = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
 	df = random.choice(dfs)

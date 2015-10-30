@@ -219,6 +219,42 @@ def getPoints3dDeterministic(side, radius, number):
 	
 	return xs, ys, zs
 
+# Need to ensure inputs don't exceed 1 because this gives greater than 1 volumePortions
+def invVolumeAlternate3D(volPortion, radiusFiller, sideMatrix):
+	import numpy
+	radiusStep = 0.025*radiusFiller # Alter radius to accommodate varying volPortion 
+	stepSize = 30
+	nS = [1,8,27,64, 125] # [125]
+	endRange = calculateVolume(nS[3], radiusFiller+stepSize*radiusStep, sideMatrix)
+	lowRange = calculateVolume(nS[0], radiusFiller-stepSize*radiusStep, sideMatrix)
+	
+	## NOTE SOMETHING WRONG HHERE THATT TAKES LONG TIME
+	while volPortion > endRange and volPortion < lowRange:
+		if volPortion > endRange:
+			stepSize = stepSize + 3
+			endRange = calculateVolume(nS[3], radiusFiller+stepSize*radiusStep, sideMatrix)
+		else:
+			stepSize = stepSize + 3
+			lowRange = calculateVolume(nS[3], radiusFiller+stepSize*radiusStep, sideMatrix)
+		
+	
+	rsCubed = (numpy.arange(radiusFiller-stepSize*radiusStep,  
+		radiusFiller+stepSize*radiusStep , radiusStep)) ** 3
+	## Grid of number circles with variable radius
+	nRGrid = numpy.outer(nS,rsCubed) * pi * 4.0/3.0
+	## Grid of differences
+	matrixGrid = sideMatrix ** 3
+	ratioGrid = nRGrid/matrixGrid
+	# Matrix of distances from volPortion
+	distn = numpy.power(numpy.power((volPortion-ratioGrid), 2), 0.5)
+	# Returns the combination yielding closest approximation to volPortion
+	vals = numpy.nonzero(distn == distn.min()) 
+	r = numpy.power((rsCubed[vals[1][0]]), 1/3.0)
+	n = nS[vals[0][0]] # number
+	return r, n
+
+
+
 """ Need to fix!
 """
 """

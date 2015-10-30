@@ -3,7 +3,7 @@ TODO/Thoughts:
  * Finish spherePacking script in Matlab to have hard limit on input for Abaqus, add method in hCoords (random)
  * Carbon Nanotubes
  * More TDD when time permits.
- * Investigate clustering more, add more checks for delta to ensure particles work.
+ * Investigate clustering more, add more checks for delta to ensure particles work. (random and det)
  * MC vs Optimization vs ML. Which is most appropriate. Let scipy do the work.
  * Add method to close the txt file if it encounters error/force quit. 
  * Add more shapes, also add single giant particle examples.
@@ -13,6 +13,5 @@ TODO/Thoughts:
  * Config file for loading all the modules?
  * No more example files doing the work, need to make some class structure or something
  * Add testing for coordinate/phr/volume methods and get data from excel into them. 
- * CODE SMELLS: hMaterial, hJob (Do ONE THING), Methods travelling in packs, too many parameters
+ * CODE SMELLS: hMaterial, hJob (Do ONE THING), Methods travelling in packs, too many parameters, boolean arguments
  * Refactor INP/Job sections. Need to create file structures of INPS with descriptions for easy submission to VIPER
- * Use parametric scripting in abaqus instead of writing it yourself..

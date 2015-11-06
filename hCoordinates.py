@@ -157,8 +157,8 @@ def getPoints3D(seed, side, radius, number, interfacePortion=0.0, deltaCoefficie
 def invPHRAlternate3D(phr, densityFiller, radiusFiller, densityMatrix, sideMatrix):
 	import numpy
 	radiusStep = 0.025*radiusFiller # Alter radius to accommodate varying phr 
-	stepSize = 30
-	nS = [1,8,27,64] # [125]
+	stepSize = 35
+	nS = [1,8,27,64] 
 	endRange = calculatePHR3D(nS[3], densityFiller, 
 		radiusFiller+stepSize*radiusStep, densityMatrix, sideMatrix)
 	lowRange = calculatePHR3D(nS[0], densityFiller, 
@@ -172,7 +172,7 @@ def invPHRAlternate3D(phr, densityFiller, radiusFiller, densityMatrix, sideMatri
 				stepSize*radiusStep, densityMatrix, sideMatrix)
 		else:
 			stepSize = stepSize + 3
-			lowRange = calculatePHR3D(nS[3], densityFiller, radiusFiller+
+			lowRange = calculatePHR3D(nS[0], densityFiller, radiusFiller+
 				stepSize*radiusStep, densityMatrix, sideMatrix)
 			
 	
@@ -223,8 +223,8 @@ def getPoints3dDeterministic(side, radius, number):
 def invVolumeAlternate3D(volPortion, radiusFiller, sideMatrix):
 	import numpy
 	radiusStep = 0.025*radiusFiller # Alter radius to accommodate varying volPortion 
-	stepSize = 30
-	nS = [1,8,27,64, 125] # [125]
+	stepSize = 35
+	nS = [1,8,27,64] 
 	endRange = calculateVolume(nS[3], radiusFiller+stepSize*radiusStep, sideMatrix)
 	lowRange = calculateVolume(nS[0], radiusFiller-stepSize*radiusStep, sideMatrix)
 	
@@ -235,7 +235,7 @@ def invVolumeAlternate3D(volPortion, radiusFiller, sideMatrix):
 			endRange = calculateVolume(nS[3], radiusFiller+stepSize*radiusStep, sideMatrix)
 		else:
 			stepSize = stepSize + 3
-			lowRange = calculateVolume(nS[3], radiusFiller+stepSize*radiusStep, sideMatrix)
+			lowRange = calculateVolume(nS[0], radiusFiller+stepSize*radiusStep, sideMatrix)
 		
 	
 	rsCubed = (numpy.arange(radiusFiller-stepSize*radiusStep,  

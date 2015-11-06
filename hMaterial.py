@@ -53,6 +53,7 @@ def defineMaterial(modelObject, strName, density, conductivity):
 
 # Note the units are in kg/micrometers. SI was giving issues during the mesh 
 # seeding process.
+
 def getMaterialList(): 
 	materials = { 
 		'ESBR' : { 'densityM' : 9.3e-016, 'conducM' : 200000.0, 'fillers' : { #TCNanoFillers
@@ -63,26 +64,28 @@ def getMaterialList():
 		'EpoxyResin' : { 'densityM' : 1.3e-015, 'conducM' : 170000, 'fillers' : { #TCPolymericCompositesReview
 			'SiliconOxide' : { 'densityF' : 2.65e-015, 'conducF' : 1400000.0, 'side' : 200, 'radius' : 20,
 				'volPortion' : [0.45]}, 
-			'AluminumNitrate' : { 'densityF' : 1.72e-015, 'conducF' : 2.5e+08, 'side' : 25, 'radius' : 1,
+			'AluminumNitrate' : { 'densityF' : 1.72e-015, 'conducF' : 2.5e+08, 'side' : 25, 'radius' : 1.5,
 				'volPortion' : [0.007]},
-			'MagnesiumOxide' : { 'densityF' : 3.58e-015, 'conducF' : 47500000.0, 'side' : 25, 'radius' : 1,
+			'MagnesiumOxide' : { 'densityF' : 3.58e-015, 'conducF' : 47500000.0, 'side' : 25, 'radius' : 1.5,
 				'volPortion' : [0.007]}, 
 			'Alumina' : { 'densityF' : 3.950e-015, 'conducF' : 25000000.0, 'side' : 50, 'radius' : 4,
 				'volPortion' : [0.312]}}},
 		'Polystyrene' : { 'densityM' : 1.05e-015, 'conducM' : 150000, 'fillers' : { # TCPolystryreneComposite
-			'AlNLarge' : { 'densityF' : 1.72e-015, 'conducF' : 1.6e+08, 'side' : 2500, 'radius' : 200,
+			'AlNLarge' : { 'densityF' : 1.72e-015, 'conducF' : 1.6e+08, 'side' : 2000, 'radius' : 150,
 				'volPortion' : [0.02, 0.04, 0.06, 0.08, 0.12, 0.165, 0.205, 0.25]},
-			'AlNSmall' : { 'densityF' : 1.72e-015, 'conducF' : 1.6e+08, 'side' : 300, 'radius' : 15,
+			'AlNSmall' : { 'densityF' : 1.72e-015, 'conducF' : 1.6e+08, 'side' : 200, 'radius' : 15,
 				'volPortion' : [0.02, 0.04, 0.06, 0.08, 0.12, 0.165, 0.205, 0.25]}}}, 
 		'SiliconRubber' : { 'densityM' : 1.5e-018, 'conducM' : 560000.0, 'fillers' : { #TCZincOxide
-			'ZnOLarge' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 1100, 'radius' : 77,
+			'ZnOLarge' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 800, 'radius' : 77,
 				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266, 0.312]}, 
-			'ZnOMedium' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 600, 'radius' : 38,
+			'ZnOMedium' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 480, 'radius' : 32,
 				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266, 0.312]},
-			'ZnOSmall' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 25, 'radius' : 1.5},
-				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266, 0.312]}}}
+			'ZnOSmall' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 25, 'radius' : 1.75,
+				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266, 0.312]}}}}
 	
 	return materials
+
+
 
 # Helper method for assigning material attributes to model db material along with returning values for required side ,radius, and portions
 # defThermalExp

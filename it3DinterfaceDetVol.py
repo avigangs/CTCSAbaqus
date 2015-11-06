@@ -13,8 +13,9 @@ from hStep import *
 
 # Get material list
 materials = getMaterialList() # Load in material Data
-matrix = "Polystyrene" # Choose the first experiment from TCNanoFillers
-fillers = ["AlNLarge", "AlNSmall"] # Two fillers associated with first experiment
+matrix = "EpoxyResin" # Choose the first experiment from TCNanoFillers
+fillers = ["Alumina"] # Two fillers associated with first experiment
+filler = fillers[0]
 print('Matrix\tFiller\tPortion\tRadius\tNumber\tSide\tIntSize\tDelta\tCalcPor\tIntCond\tSeed\tNodes\tElements\tDevFac\tMeshSeed\tq\tdT\tk\tNoElmWarn\tWarn\n')
 seed = None
 
@@ -22,10 +23,10 @@ seed = None
 modelObject, modelName = createModel(2)
 
 # define materials
-side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, matrix, "AlNLarge")
+side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, matrix, filler)
 
 # which phr
-vol = portions[4]
+vol = portions[0]
 #densityMatrix = materials[matrix]['densityM']
 #densityFiller = materials[matrix]['fillers']['Alumina']['densityF']
 #sideMatrix = materials[matrix]['fillers']['Alumina']['side']
@@ -60,7 +61,7 @@ edges3, vertices3, face3 = assignGeomSequence(part3) # Create references to impo
 matrixSet, particleSet, interfaceSet = create3DInitialSets(part, part2, side, part3) # create sets for particle, matrix, and interface
 
 createSection(modelObject, part, matrix, matrixSet) # Create section for matrix material
-createSection(modelObject, part2, "AlNLarge", particleSet) # Create section for filler material
+createSection(modelObject, part2, filler, particleSet) # Create section for filler material
 createSection(modelObject, part3, "Interface", interfaceSet) # Create section for interface
 
 warningPoints = ""
@@ -70,7 +71,7 @@ assemblyTop, assemblyBottom, assemblyAll = define3DAssemblySets(modelRootAssembl
 temp1, temp2 = 328.15, 298.15 # Assign heat temperature to be used in experiment
 heatStep3D(modelObject, assemblyBottom, assemblyTop, temp1, temp2) # apply heat BC
 limitOutputHFL(modelObject, assemblyBottom, assemblyTop) # Limit ODB Output
-elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly)  # Draw mesh and return number of nodes and elements
+elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly, 10, 0.05)  # Draw mesh and return number of nodes and elements
 makeElementSet(fullMatrixPart, modelRootAssembly)
 print(str(seed) + " " +str(number) + " " + str(radius) + " " + str(df) + " " + str(meshSeed) + " " + str(elements) + " " +str(nodes) + " " + warningPoints)
 fileName = "job1341"

@@ -15,3 +15,4 @@ TODO/Thoughts:
  * Add testing for coordinate/phr/volume methods and get data from excel into them. 
  * CODE SMELLS: hMaterial, hJob (Do ONE THING), Methods travelling in packs, too many parameters, boolean arguments
  * Refactor INP/Job sections. Need to create file structures of INPS with descriptions for easy submission to VIPER
+ * add commented code to testing for stubs/mocks/etc

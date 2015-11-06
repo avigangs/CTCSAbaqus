@@ -22,7 +22,7 @@ os.makedirs(inpRoot)
 # Create manifest
 manifile = inpRoot+"/manifest.txt"
 f = open(manifile, "w")
-f.write('ID\tMatrix\tFiller\tPortion\tCalcPortion\tRadius\tNumber\tSide\tDelta\tIntSize\tIntCond\tNodes\tElements\tDevFac\tMeshSeed\tdT\n')
+f.write('ID,Matrix,Filler,Portion,CalcPo,Radius,Number,Side,Delta,IntSize,IntCond,Nodes,Elements,DevFac,MeshSeed,dT\n')
 f.close()
 
 # Get material list
@@ -51,65 +51,130 @@ for key1, val in materials.iteritems():
 				# Parameter level
 				os.makedirs(inpRoot+"/"+str(key1)+"/"+str(key2)+"/"+str(val3)+"/"+str(val4))
 				
-				
-				# make model
-				modelObject, modelName = createModel(2)
+				if val4 == "radius":
+					for i in range(2):
+						# make model
+						modelObject, modelName = createModel(2)
+						# define materials
+						side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, key1, key2)
+						phr = val3 
+						# get coordinates, interface Max, random interface size, etc.
+						if portio1 in materials[key1]['fillers'][key2].keys():
+							radius, number = invPHRAlternate3D(phr, dP, radius, dM, side)
+							calcPHR = round(calculatePHR3D(number, dP, radius, dM, side))
+						elif portio2 in materials[key1]['fillers'][key2].keys():
+							radius, number = invVolumeAlternate3D(phr, radius, side)
+							calcPHR = round(calculateVolume(number, radius, side), 3)
+						
+						delta = 0.15
+						
+						#interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
+						#interfaceConductivity = int(interfaceConductivity[0])
+						interfaceConductivity = int((cP+cM)/2.0)
+						# Define interface materials
+						defineMaterial(modelObject, "Interface", dM, interfaceConductivity)
+						intPortionLimit = getInterfacePortionLimit(side, radius, number, delta)
+						interfacePortion = numpy.random.sample(1) * (intPortionLimit-0.15) + 0.15 # random 0.15 to limit inclusive
+						interfacePortion = round(interfacePortion[0], 3)
+						xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number)
 
-				# define materials
-				side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, key1, key2)
-				phr = val3 ###
-				# get coordinates, interface Max, random interface size, etc.
-				radius, number = invPHRAlternate3D(phr, dP, radius, dM, side)
-				delta = 0.15
-				intPortionLimit = getInterfacePortionLimit(side, radius, number, delta)
-				interfacePortion = numpy.random.sample(1) * (intPortionLimit-0.15) + 0.15 # random 0.15 to limit inclusive
-				interfacePortion = round(interfacePortion[0], 3)
-				xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number)
+						part = createMatrix(modelObject, side, False) # Create the matrix
+						edges1, vertices1, face1 = assignGeomSequence(part) # Create references to important sets in our matrix
+						part2 = createSphereParticle(modelObject, radius, side) # Create Particle part
+						edges2, vertices2, face2 = assignGeomSequence(part2) # Create references to important sets in particle 
+						part3 = createSphereParticle(modelObject, (radius + radius*interfacePortion), side, "Interface") # Create interface part
+						edges3, vertices3, face3 = assignGeomSequence(part3) # Create references to important sets in interface
+						matrixSet, particleSet, interfaceSet = create3DInitialSets(part, part2, side, part3) # create sets for particle, matrix, and interface
 
-				interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
-				interfaceConductivity = int(interfaceConductivity[0])
-				# Define interface materials
-				defineMaterial(modelObject, "Interface", dM, interfaceConductivity)
+						createSection(modelObject, part, key1, matrixSet) # Create section for matrix material
+						createSection(modelObject, part2, key2, particleSet) # Create section for filler material
+						createSection(modelObject, part3, "Interface", interfaceSet) # Create section for interface
 
-				# Check PHR values
-				calcPHR = round(calculatePHR3D(number, dP, radius, dM, side))
+						modelRootAssembly, fullMatrixPart = create3DMatrixInclusions(modelObject, part, part2, number, xVals, yVals, zVals, part3) # Create assembly and return references to assembly sets
+						assemblyTop, assemblyBottom, assemblyAll = define3DAssemblySets(modelRootAssembly, side)
+						temp1, temp2 = 328.15, 298.15 # Assign heat temperature to be used in experiment
+						heatStep3D(modelObject, assemblyBottom, assemblyTop, temp1, temp2) # apply heat BC
+						limitOutputHFL(modelObject, assemblyBottom, assemblyTop) # Limit ODB Output
+						elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly)  # Draw mesh and return number of nodes and elements
+						makeElementSet(fullMatrixPart, modelRootAssembly)
+						
+						fileName = key1 + key2 + val4 + str(i+1)
+						jobFi = createJob(modelName, fileName)
+						afile = open(manifile, "a")
+						afile.write(str(i+1)+","+key1+","+key2+","+str(phr)+","+str(calcPHR)+","+str(radius)+","+str(side)+","+str(delta)+","+str(interfacePortion)+","+str(interfaceConductivity)+","+str(nodes)+","+str(elements)+","+str(df)+","+str(meshSeed)+","+str(temp1-temp2)+"\n")
+						afile.close()
+						os.chdir(inpRoot+"/"+str(key1)+"/"+str(key2)+"/"+str(val3)+"/"+str(val4))
+						generateINP(fileName)
+						os.chdir(workingDir)
+						del mdb.jobs[fileName]
+						del mdb.models[modelName]
+				elif val4 == "tc":
+					# make model
+					modelObject, modelName = createModel(2)
 
-				part = createMatrix(modelObject, side, False) # Create the matrix
-				edges1, vertices1, face1 = assignGeomSequence(part) # Create references to important sets in our matrix
-				part2 = createSphereParticle(modelObject, radius, side) # Create Particle part
-				edges2, vertices2, face2 = assignGeomSequence(part2) # Create references to important sets in particle 
-				part3 = createSphereParticle(modelObject, (radius + radius*interfacePortion), side, "Interface") # Create interface part
-				edges3, vertices3, face3 = assignGeomSequence(part3) # Create references to important sets in interface
-				matrixSet, particleSet, interfaceSet = create3DInitialSets(part, part2, side, part3) # create sets for particle, matrix, and interface
+					# define materials
+					side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, key1, key2)
+					phr = val3 ###
+					# get coordinates, interface Max, random interface size, etc.
+					if portio1 in materials[key1]['fillers'][key2].keys():
+						radius, number = invPHRAlternate3D(phr, dP, radius, dM, side)
+						calcPHR = round(calculatePHR3D(number, dP, radius, dM, side))
+					elif portio2 in materials[key1]['fillers'][key2].keys():
+						radius, number = invVolumeAlternate3D(phr, radius, side)
+						calcPHR = calculateVolume(number, radius, side)
+					
+					delta = 0.15
+					intPortionLimit = getInterfacePortionLimit(side, radius, number, delta)
+					interfacePortion = numpy.random.sample(1) * (intPortionLimit-0.15) + 0.15 # random 0.15 to limit inclusive
+					interfacePortion = round(interfacePortion[0], 3)
+					xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number)
 
-				createSection(modelObject, part, key1, matrixSet) # Create section for matrix material
-				createSection(modelObject, part2, key2, particleSet) # Create section for filler material
-				createSection(modelObject, part3, "Interface", interfaceSet) # Create section for interface
-
-				modelRootAssembly, fullMatrixPart = create3DMatrixInclusions(modelObject, part, part2, number, xVals, yVals, zVals, part3) # Create assembly and return references to assembly sets
-				assemblyTop, assemblyBottom, assemblyAll = define3DAssemblySets(modelRootAssembly, side)
-				temp1, temp2 = 328.15, 298.15 # Assign heat temperature to be used in experiment
-				heatStep3D(modelObject, assemblyBottom, assemblyTop, temp1, temp2) # apply heat BC
-				limitOutputHFL(modelObject, assemblyBottom, assemblyTop) # Limit ODB Output
-				elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly)  # Draw mesh and return number of nodes and elements
-				makeElementSet(fullMatrixPart, modelRootAssembly)
-
-				## define range for interface conductivity # Either constant or varying depending on other constants
-				for i in range(3):
 					interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
 					interfaceConductivity = int(interfaceConductivity[0])
 					# Define interface materials
-					defineMaterial(modelObject, "Interface", dM, interfaceConductivity) 
+					defineMaterial(modelObject, "Interface", dM, interfaceConductivity)
+
+					# Check PHR values
 					
-					fileName = key1 + key2 + str(i+1)
-					jobFi = createJob(modelName, fileName)
-					afile = open(manifile, "a")
-					afile.write(str(i+1)+"\t"+key1+"\t"+key2+"\t"+str(phr)+"\t"+str(calcPHR)+"\t"+str(radius)+"\t"+str(side)+"\t"+str(delta)+"\t"+str(interfacePortion)+"\t"+str(interfaceConductivity)+"\t"+str(nodes)+"\t"+str(elements)+"\t"+str(df)+"\t"+str(meshSeed)+"\t"+str(temp1-temp2)+"\n")
-					afile.close()
-					os.chdir(inpRoot+"/"+str(key1)+"/"+str(key2)+"/"+str(val3)+"/"+str(val4))
-					generateINP(fileName)
-					os.chdir(workingDir)
-					del mdb.jobs[fileName]
+
+					part = createMatrix(modelObject, side, False) # Create the matrix
+					edges1, vertices1, face1 = assignGeomSequence(part) # Create references to important sets in our matrix
+					part2 = createSphereParticle(modelObject, radius, side) # Create Particle part
+					edges2, vertices2, face2 = assignGeomSequence(part2) # Create references to important sets in particle 
+					part3 = createSphereParticle(modelObject, (radius + radius*interfacePortion), side, "Interface") # Create interface part
+					edges3, vertices3, face3 = assignGeomSequence(part3) # Create references to important sets in interface
+					matrixSet, particleSet, interfaceSet = create3DInitialSets(part, part2, side, part3) # create sets for particle, matrix, and interface
+
+					createSection(modelObject, part, key1, matrixSet) # Create section for matrix material
+					createSection(modelObject, part2, key2, particleSet) # Create section for filler material
+					createSection(modelObject, part3, "Interface", interfaceSet) # Create section for interface
+
+					modelRootAssembly, fullMatrixPart = create3DMatrixInclusions(modelObject, part, part2, number, xVals, yVals, zVals, part3) # Create assembly and return references to assembly sets
+					assemblyTop, assemblyBottom, assemblyAll = define3DAssemblySets(modelRootAssembly, side)
+					temp1, temp2 = 328.15, 298.15 # Assign heat temperature to be used in experiment
+					heatStep3D(modelObject, assemblyBottom, assemblyTop, temp1, temp2) # apply heat BC
+					limitOutputHFL(modelObject, assemblyBottom, assemblyTop) # Limit ODB Output
+					elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly)  # Draw mesh and return number of nodes and elements
+					makeElementSet(fullMatrixPart, modelRootAssembly)
+
+					## define range for interface conductivity # Either constant or varying depending on other constants
+					for i in range(2):
+						interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
+						interfaceConductivity = int(interfaceConductivity[0])
+						# Define interface materials
+						defineMaterial(modelObject, "Interface", dM, interfaceConductivity) 
+						
+						fileName = key1 + key2 + val4 + str(i+1)
+						jobFi = createJob(modelName, fileName)
+						afile = open(manifile, "a")
+						afile.write(str(i+1)+","+key1+","+key2+","+str(phr)+","+str(calcPHR)+","+str(radius)+","+str(side)+","+str(delta)+","+str(interfacePortion)+","+str(interfaceConductivity)+","+str(nodes)+","+str(elements)+","+str(df)+","+str(meshSeed)+","+str(temp1-temp2)+"\n")
+						afile.close()
+						os.chdir(inpRoot+"/"+str(key1)+"/"+str(key2)+"/"+str(val3)+"/"+str(val4))
+						generateINP(fileName)
+						os.chdir(workingDir)
+						del mdb.jobs[fileName]
+				
+				
 
 #odbfileName = modelName
 #warningString, noElementsWarning = submitJob(modelName, odbfileName)  # Submit job and take note of any warnings

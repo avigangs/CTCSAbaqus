@@ -78,6 +78,7 @@ def create3DMatrixInclusions(modelObject, matPart, parPart, number, xVals,
 			instances=(allInstances), keepIntersections=aq.ON, name='matrixFull',
 			originalInstances=aq.DELETE) # make the final assembly
 		modelRootAssembly.makeIndependent(instances=(modelRootAssembly.instances['matrixFull-1'], ))
+		fullMatrixPart = modelObject.parts['matrixFull']
 	else: 
 		for zz in range(number): # Create each particle
 			modelRootAssembly.Instance(dependent=aq.ON, name='Particle-'+str(zz+1),

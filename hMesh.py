@@ -171,7 +171,7 @@ phr = phrs[0]
 radius, number = invVolumeAlternate3D(phr, radius, side)
 calcPHR = round(calculateVolume(number, radius, side), 3)
 
-delta = 0.18
+delta = 0.06
 
 interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
 interfaceConductivity = int(interfaceConductivity[0])
@@ -180,17 +180,11 @@ interfaceConductivity = int(interfaceConductivity[0])
 defineMaterial(modelObject, "Interface", dM, interfaceConductivity)
 intPortionLimit = getInterfacePortionLimit(side, radius, number, delta)
 
-while intPortionLimit < 0:
-	delta = delta + 0.1 * delta
-	interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
-	interfaceConductivity = int(interfaceConductivity[0])
-	#interfaceConductivity = int((cP+cM)/2.0)
-	# Define interface materials
-	defineMaterial(modelObject, "Interface", dM, interfaceConductivity)
-	intPortionLimit = getInterfacePortionLimit(side, radius, number, delta)
+minimumPortion = 0.10
 
-
-interfacePortion = numpy.random.sample(1) * (intPortionLimit-delta) + delta # random delta to limit inclusive
+## THIS IS A PROBLEM. We need Interface limit to be the highest possible portion selected,
+# and the minimum must be around 0.15. Interface Limit must exceed 0.15 then.
+interfacePortion = numpy.random.sample(1) * (intPortionLimit-minimumPortion) + minimumPortion # random delta to limit inclusive
 interfacePortion = round(interfacePortion[0], 3)
 xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number)
 
@@ -217,6 +211,9 @@ print (intPortionLimit)
 print(interfacePortion)
 print(df)
 print(meshSeed)
+print(calcPHR)
+
+
 
 """
 
@@ -238,7 +235,8 @@ epoxyResin Alumina seed 0.95 control 0.045 particles 27 elements 1 millionish 2 
 epoxyResin Alumina seed 0.90 control 0.0425 particles 27 elements 1.2 millionish 0 errors interfacePortion 0.131
 epoxyResin Alumina seed 1 control 0.05 particles 27 elements 1 millionish 106700 errors interfacePortion 0.08
 
-delta = 18 (safer.. also make interface portion the same as delta)
+delta = 18 (safer.. also make interface portion 0.15)
+epoxyResin Alumina seed 1 control 0.05 particles 27 elements 0.85 millionish 3 errors interfacePortion 0.1
 """
 
 """

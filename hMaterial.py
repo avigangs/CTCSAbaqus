@@ -69,7 +69,7 @@ def getMaterialList():
 			'MagnesiumOxide' : { 'densityF' : 3.58e-015, 'conducF' : 47500000.0, 'side' : 25, 'radius' : 1.5,
 				'volPortion' : [0.007]}, 
 			'Alumina' : { 'densityF' : 3.950e-015, 'conducF' : 25000000.0, 'side' : 50, 'radius' : 4,
-				'volPortion' : [0.312]}}},
+				'volPortion' : [0.312], 'meshSeed' : 0.95, 'df' : 0.04, 'delta' : 0.10, 'minInt' : 0.10}}},
 		'Polystyrene' : { 'densityM' : 1.05e-015, 'conducM' : 150000, 'fillers' : { # TCPolystryreneComposite
 			'AlNLarge' : { 'densityF' : 1.72e-015, 'conducF' : 1.6e+08, 'side' : 2000, 'radius' : 150,
 				'volPortion' : [0.02, 0.04, 0.06, 0.08, 0.12, 0.165, 0.205, 0.25]},

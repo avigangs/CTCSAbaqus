@@ -16,3 +16,4 @@ TODO/Thoughts:
  * CODE SMELLS: hMaterial, hJob (Do ONE THING), Methods travelling in packs, too many parameters, boolean arguments
  * Refactor INP/Job sections. Need to create file structures of INPS with descriptions for easy submission to VIPER
  * add commented code to testing for stubs/mocks/etc
+ * Notice issue if material and sections have different names. This shouldnt matter but it causes errors

@@ -148,7 +148,7 @@ def getPoints3D(seed, side, radius, number, interfacePortion=0.0, deltaCoefficie
 		warningMsg = '?'
 		number = numberCoords # Needed for updated return value.
 	
-	return xCoords, yCoords, zCoords, warningMsg, number
+	return xCoords, yCoords, zCoords, warningMsg, int(round(number))
 
 # Alternate version of other invPHR function
 # NOTE: consider having one that returns closes approximation for each number size

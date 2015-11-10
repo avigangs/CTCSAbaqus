@@ -154,10 +154,12 @@ def getPoints3D(seed, side, radius, number, interfacePortion=0.0, deltaCoefficie
 # NOTE: consider having one that returns closes approximation for each number size
 # so we can make sure that number of particles doesn't disproportionately influence 
 # TC. 
+# NOTE: This is a problem because sometimes we should have more of an error
+# but be closer to the original radius then dramatically altering to fit. 
 def invPHRAlternate3D(phr, densityFiller, radiusFiller, densityMatrix, sideMatrix):
 	import numpy
 	radiusStep = 0.025*radiusFiller # Alter radius to accommodate varying phr 
-	stepSize = 35
+	stepSize = 15
 	nS = [1,8,27,64] 
 	endRange = calculatePHR3D(nS[3], densityFiller, 
 		radiusFiller+stepSize*radiusStep, densityMatrix, sideMatrix)
@@ -219,11 +221,13 @@ def getPoints3dDeterministic(side, radius, number):
 	
 	return xs, ys, zs
 
+## TODO:
+# LIMIT THE STEP INITIALLY AND GROW ONLY IF NEEDED
 # Need to ensure inputs don't exceed 1 because this gives greater than 1 volumePortions
 def invVolumeAlternate3D(volPortion, radiusFiller, sideMatrix):
 	import numpy
 	radiusStep = 0.025*radiusFiller # Alter radius to accommodate varying volPortion 
-	stepSize = 35
+	stepSize = 15
 	nS = [1,8,27,64] 
 	endRange = calculateVolume(nS[3], radiusFiller+stepSize*radiusStep, sideMatrix)
 	lowRange = calculateVolume(nS[0], radiusFiller-stepSize*radiusStep, sideMatrix)
@@ -253,7 +257,8 @@ def invVolumeAlternate3D(volPortion, radiusFiller, sideMatrix):
 	n = nS[vals[0][0]] # number
 	return r, n
 
-
+# AM i doing this all wrong? Perhaps I could write a method to
+# take side, take number of particles, delta...
 
 """ Need to fix!
 """

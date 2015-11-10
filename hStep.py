@@ -49,6 +49,6 @@ def limitOutputHFL(modelObject, assemblyBottom, assemblyTop):
 	modelObject.FieldOutputRequest(createStepName='Step-1', name=
 		'F-Output-2', rebar=aq.EXCLUDE, region=assemblyTop, sectionPoints=
 		aq.DEFAULT, variables=('HFL', ))
-	modelObject.HistoryOutputRequest(createStepName='Step-1', frequency=
-    aq.LAST_INCREMENT, name='H-Output-1', rebar=aq.EXCLUDE, region=assemblyBottom,
-	sectionPoints=aq.DEFAULT, variables=('HFL1', 'HFL2', 'HFL3', 'HFLM'))
+	#modelObject.HistoryOutputRequest(createStepName='Step-1', frequency=
+    #aq.LAST_INCREMENT, name='H-Output-1', rebar=aq.EXCLUDE, region=assemblyBottom,
+	#sectionPoints=aq.DEFAULT, variables=('HFL1', 'HFL2', 'HFL3', 'HFLM'))

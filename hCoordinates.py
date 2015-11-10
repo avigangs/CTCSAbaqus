@@ -221,6 +221,8 @@ def getPoints3dDeterministic(side, radius, number):
 	
 	return xs, ys, zs
 
+## TODO:
+# LIMIT THE STEP INITIALLY AND GROW ONLY IF NEEDED
 # Need to ensure inputs don't exceed 1 because this gives greater than 1 volumePortions
 def invVolumeAlternate3D(volPortion, radiusFiller, sideMatrix):
 	import numpy

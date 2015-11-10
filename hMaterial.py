@@ -58,30 +58,30 @@ def getMaterialList():
 	materials = { 
 		'ESBR' : { 'densityM' : 9.3e-016, 'conducM' : 200000.0, 'fillers' : { #TCNanoFillers
 			'Alumina' : { 'densityF' : 3.950e-015, 'conducF' : 15000000.0, 'side' : 520, 'radius' : 37.5,
-				'phr' : [10, 20, 40, 80, 100]}, 
+				'phr' : [10, 20, 40, 80, 100], 'meshSeed' : 10, 'df' : 0.0375, 'delta' : 0.15, 'minInt' : 0.15}, 
 			'ZincOxide' : { 'densityF' : 5.610e-015, 'conducF' : 25000000.0, 'side' : 176, 'radius' : 22.5,
-				'phr' : [5, 10, 20, 40, 80, 100]}}}, 
+				'phr' : [5, 10, 20, 40, 80, 100], 'meshSeed' : 3.2, 'df' : 0.0125, 'delta' : 0.17, 'minInt' : 0.17}}}, 
 		'EpoxyResin' : { 'densityM' : 1.3e-015, 'conducM' : 170000, 'fillers' : { #TCPolymericCompositesReview
 			'SiliconOxide' : { 'densityF' : 2.65e-015, 'conducF' : 1400000.0, 'side' : 200, 'radius' : 20,
-				'volPortion' : [0.45]}, 
+				'volPortion' : [0.43], 'meshSeed' : 4.5, 'df' : 0.05, 'delta' : 0.03, 'minInt' : 0.03}, 
 			'AluminumNitrate' : { 'densityF' : 1.72e-015, 'conducF' : 2.5e+08, 'side' : 25, 'radius' : 1.5,
-				'volPortion' : [0.007]},
+				'volPortion' : [0.007], 'meshSeed' : 0.5, 'df' : 0.0225, 'delta' : 0.20, 'minInt' : 0.15}, 
 			'MagnesiumOxide' : { 'densityF' : 3.58e-015, 'conducF' : 47500000.0, 'side' : 25, 'radius' : 1.5,
-				'volPortion' : [0.007]}, 
+				'volPortion' : [0.007], 'meshSeed' : 0.4, 'df' : 0.0225, 'delta' : 0.20, 'minInt' : 0.15}, 
 			'Alumina' : { 'densityF' : 3.950e-015, 'conducF' : 25000000.0, 'side' : 50, 'radius' : 4,
-				'volPortion' : [0.312], 'meshSeed' : 0.95, 'df' : 0.04, 'delta' : 0.10, 'minInt' : 0.10}}},
+				'volPortion' : [0.312], 'meshSeed' : 0.85, 'df' : 0.035, 'delta' : 0.07, 'minInt' : 0.10}}}, 
 		'Polystyrene' : { 'densityM' : 1.05e-015, 'conducM' : 150000, 'fillers' : { # TCPolystryreneComposite
 			'AlNLarge' : { 'densityF' : 1.72e-015, 'conducF' : 1.6e+08, 'side' : 2000, 'radius' : 150,
-				'volPortion' : [0.02, 0.04, 0.06, 0.08, 0.12, 0.165, 0.205, 0.25]},
+				'volPortion' : [0.02, 0.04, 0.06, 0.08, 0.12, 0.165, 0.205, 0.25], 'meshSeed' : 35, 'df' : 0.032, 'delta' : 0.08, 'minInt' : 0.10},
 			'AlNSmall' : { 'densityF' : 1.72e-015, 'conducF' : 1.6e+08, 'side' : 200, 'radius' : 15,
-				'volPortion' : [0.02, 0.04, 0.06, 0.08, 0.12, 0.165, 0.205, 0.25]}}}, 
+				'volPortion' : [0.02, 0.04, 0.06, 0.08, 0.12, 0.165, 0.205, 0.25], 'meshSeed' : 9, 'df' : 0.0225, 'delta' : 0.08, 'minInt' : 0.10}}}, 
 		'SiliconRubber' : { 'densityM' : 1.5e-018, 'conducM' : 560000.0, 'fillers' : { #TCZincOxide
 			'ZnOLarge' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 800, 'radius' : 77,
-				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266, 0.312]}, 
+				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266], 'meshSeed' : 19, 'df' : 0.0255, 'delta' : 0.08, 'minInt' : 0.08}, 
 			'ZnOMedium' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 480, 'radius' : 32,
-				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266, 0.312]},
+				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266], 'meshSeed' : 11, 'df' : 0.04, 'delta' : 0.10, 'minInt' : 0.10}, 
 			'ZnOSmall' : { 'densityF' : 5.610e-015, 'conducF' : 60000000.0, 'side' : 25, 'radius' : 1.75,
-				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266, 0.312]}}}}
+				'volPortion' : [0.083, 0.16, 0.185, 0.241, 0.266], 'meshSeed' : 0.50, 'df' : 0.0250, 'delta' : 0.08, 'minInt' : 0.08}}}} 
 	
 	return materials
 

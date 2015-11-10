@@ -156,22 +156,35 @@ polyFillers = polystyrene['fillers'].keys()  # 2
 eFillers = esbr['fillers'].keys()   # 2
 
 modelObject, modelName = createModel(2)
-side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, matrix_materials[0], epFillers[0])
 
-key1 = matrix_materials[0]
-key2 = epFillers[0]
+num1 = 3
+num2 = 1
+whichMat = esbrFillers
 
-phrs = epoxyResinFillers[epFillers[0]]['volPortion']
-phr = phrs[0]
+side, radius, portions, dP, dM, cP, cM = defExperiment(modelObject, matrix_materials[num1], eFillers[num2])
+
+key1 = matrix_materials[num1]
+key1
+#key2 = eFillers[2]
+key2 = eFillers[num2]
+key2
+radius
+portions
+side
+
+phrs = whichMat[key2]['phr']
+phr = phrs[4]
 
 
-#radius, number = invPHRAlternate3D(phr, dP, radius, dM, side)
-#calcPHR = round(calculatePHR3D(number, dP, radius, dM, side))
+radius, number = invPHRAlternate3D(phr, dP, radius, dM, side)
+calcPHR = round(calculatePHR3D(number, dP, radius, dM, side))
 
-radius, number = invVolumeAlternate3D(phr, radius, side)
-calcPHR = round(calculateVolume(number, radius, side), 3)
+#radius, number = invVolumeAlternate3D(phr, radius, side)
+#calcPHR = round(calculateVolume(number, radius, side), 3)
 
-delta = 0.06
+#delta = 0.06
+#delta = 0.2
+delta = 0.15
 
 interfaceConductivity= numpy.random.sample(1) * (cP-cM) + cM # Between cM and cP
 interfaceConductivity = int(interfaceConductivity[0])
@@ -180,12 +193,16 @@ interfaceConductivity = int(interfaceConductivity[0])
 defineMaterial(modelObject, "Interface", dM, interfaceConductivity)
 intPortionLimit = getInterfacePortionLimit(side, radius, number, delta)
 
-minimumPortion = 0.10
+minimumPortion = 0.15
+
+intPortionLimit - minimumPortion 
+
 
 ## THIS IS A PROBLEM. We need Interface limit to be the highest possible portion selected,
 # and the minimum must be around 0.15. Interface Limit must exceed 0.15 then.
 interfacePortion = numpy.random.sample(1) * (intPortionLimit-minimumPortion) + minimumPortion # random delta to limit inclusive
 interfacePortion = round(interfacePortion[0], 3)
+interfacePortion
 xVals, yVals, zVals = getPoints3dDeterministic(side, radius, number)
 
 part = createMatrix(modelObject, side, False) # Create the matrix
@@ -203,7 +220,7 @@ assemblyTop, assemblyBottom, assemblyAll = define3DAssemblySets(modelRootAssembl
 temp1, temp2 = 328.15, 298.15 # Assign heat temperature to be used in experiment
 heatStep3D(modelObject, assemblyBottom, assemblyTop, temp1, temp2) # apply heat BC
 limitOutputHFL(modelObject, assemblyBottom, assemblyTop) # Limit ODB Output
-elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly, 1, 0.05)  # Draw mesh and return number of nodes and elements
+elements, nodes, df, meshSeed = makeMesh3D(modelObject, modelRootAssembly, 10, 0.03750)  # Draw mesh and return number of nodes and elements
 makeElementSet(fullMatrixPart, modelRootAssembly)
 
 print(delta)
@@ -212,10 +229,67 @@ print(interfacePortion)
 print(df)
 print(meshSeed)
 print(calcPHR)
+calcPHR - phr
 
 
-
+del mdb.models['Model-2']
 """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 """ delta = 25 seems very safe for low errors
 MESH MAP delta 0.2 with 64 particle possibility
